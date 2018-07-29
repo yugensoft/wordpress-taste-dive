@@ -2,6 +2,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class WikiImage
+ *
+ * Functions for extracting the "primary" image from Wikipedia pages or APIs
+ */
 final class WikiImage {
 
 	const THUMB_SIZE = 500;

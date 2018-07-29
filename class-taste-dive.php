@@ -2,6 +2,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class TasteDive
+ *
+ * Controller-esque main class
+ */
 final class TasteDive {
 
 	const DEFAULT_RECOMMENDATIONS_LIMIT = 5;
@@ -11,8 +16,12 @@ final class TasteDive {
 		throw new Exception( 'No instantiation.' );
 	}
 
+	/**
+	 * Registers hooks and adds actions upon plugin being loaded
+	 */
 	public static function init_hooks(){
 		register_activation_hook( TASTE_DIVE_PLUGIN_FILE, array( 'TasteDiveDb', 'db_install' ) );
+		register_uninstall_hook( TASTE_DIVE_PLUGIN_FILE, array( 'TasteDiveDb', 'db_uninstall' ) );
 		add_action( 'plugins_loaded', array( 'TasteDiveDb', 'db_update' ) );
 		add_action( 'init', array( __CLASS__, 'init' ) );
 
@@ -34,9 +43,16 @@ final class TasteDive {
 		});
 	}
 
+	/**
+	 * Runs on action: init
+	 */
 	public static function init() {
 		add_shortcode( 'tastedive', array( __CLASS__, 'shortcode' ) );
 	}
+
+	/**
+	 * Runs on action: admin_init
+	 */
 	public static function admin_init(){
 		// Settings
 		register_setting( 'taste_dive', 'taste_dive_settings', function( $input ) {
@@ -214,8 +230,18 @@ final class TasteDive {
 		return "<p>TasteDive shortcode error: ".$error->get_error_message()."</p>";
 	}
 
-	public static function array_multi_search_with_default( $attrs, array $keys, $default ) {
-		$a = array_intersect_key( $attrs, array_flip( $keys ) );
+	/**
+	 * Get the first element of an array, with one of a set of given keys, that is not empty;
+	 * or the default if none are found.
+	 *
+	 * @param array $array Input array
+	 * @param array $keys Keys to search for
+	 * @param mixed $default Value to return if none of the keys are found
+	 *
+	 * @return mixed Found value or default
+	 */
+	public static function array_multi_search_with_default( array $array, array $keys, $default ) {
+		$a = array_intersect_key( $array, array_flip( $keys ) );
 		return empty($a) ? $default : array_values($a)[0];
 	}
 
