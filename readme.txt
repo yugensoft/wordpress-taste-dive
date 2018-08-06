@@ -1,10 +1,10 @@
 === Recommendations TasteDive ===
 Contributors: yugensoft
 Tags: recommendations, movies, music, tv shows, games, books, authors, tastedive
-Requires at least: 4.0
+Requires at least: 4.7
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

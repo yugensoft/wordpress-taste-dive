@@ -1,5 +1,7 @@
 <?php
 
+namespace Yugensoft\TasteDive;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,7 +22,6 @@ final class WikiImage {
 	 */
 	public static function get( $item ) {
 		$methods = array(
-			array(__CLASS__, 'get_by_pageimage'),
 			array(__CLASS__, 'get_by_parsing'),
 			array(__CLASS__, 'get_by_p18_claim'),
 		);
@@ -36,7 +37,9 @@ final class WikiImage {
 	}
 
 	/**
-	 * Use the Wikimedia P18 'claim' to find the main image
+	 * Scrape the wikipedia page infobox to find the main image
+	 *
+	 * Note: it's common that this is set.
 	 *
 	 * @param $item
 	 *
@@ -63,44 +66,9 @@ final class WikiImage {
 	}
 
 	/**
-	 * Use the Wikimedia P18 'claim' to find the main image
-	 *
-	 * @param $item
-	 *
-	 * @return string|null URL to image
-	 */
-	public static function get_by_pageimage( $item ) {
-		$title = self::item_wiki_title( $item );
-
-		$api_url = "https://www.mediawiki.org/w/api.php?";
-
-		// Attempt to get the main image
-		$wiki_uri = $api_url . build_query( array(
-				'action'      => 'query',
-				'prop'       => 'pageimages',
-				'titles'      => $title,
-				'format'      => 'json',
-				'pithumbsize' => self::THUMB_SIZE,
-			) );
-		$json = @file_get_contents( $wiki_uri );
-		if ( $json === false ) {
-			return null;
-		}
-
-		$data = json_decode( $json, true );
-
-		// Find the associated image file if possible
-		if (isset( $data['query']['pages'][ -1 ]['missing'] ) ) {
-			return null;
-		} else {
-
-		}
-
-		return null;
-	}
-
-	/**
 	 * Use the P18 Wikimedia 'claim' to find the main image
+	 *
+	 * Note: it's fairly rare this is set, and when it is it's often wrong or not the 'main' image.
 	 *
 	 * @param $item
 	 *
@@ -116,7 +84,7 @@ final class WikiImage {
 		};
 
 		// Attempt to get the main image
-		$wiki_uri = $api_url . build_query( array(
+		$wiki_uri = $api_url . http_build_query( array(
 				'action'      => 'wbgetentities',
 				'sites'       => 'enwiki',
 				'props'       => 'claims',

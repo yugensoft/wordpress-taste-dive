@@ -1,5 +1,10 @@
 <?php
 
+namespace Yugensoft\TasteDive;
+
+use Exception;
+use WP_Error;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,9 +25,9 @@ final class TasteDive {
 	 * Registers hooks and adds actions upon plugin being loaded
 	 */
 	public static function init_hooks(){
-		register_activation_hook( TASTE_DIVE_PLUGIN_FILE, array( 'TasteDiveDb', 'db_install' ) );
-		register_uninstall_hook( TASTE_DIVE_PLUGIN_FILE, array( 'TasteDiveDb', 'db_uninstall' ) );
-		add_action( 'plugins_loaded', array( 'TasteDiveDb', 'db_update' ) );
+		register_activation_hook( TASTE_DIVE_PLUGIN_FILE, array( TasteDiveDb::class, 'db_install' ) );
+		register_uninstall_hook( TASTE_DIVE_PLUGIN_FILE, array( TasteDiveDb::class , 'db_uninstall' ) );
+		add_action( 'plugins_loaded', array( TasteDiveDb::class, 'db_update' ) );
 		add_action( 'init', array( __CLASS__, 'init' ) );
 
 		add_action( 'admin_menu', function() {
@@ -40,6 +45,7 @@ final class TasteDive {
 
 		add_action( 'wp_enqueue_scripts', function() {
 			wp_enqueue_style( 'taste_dive', plugin_dir_url( __FILE__ ) . 'assets/css/taste_dive.css' );
+			wp_enqueue_style( 'fontawesome5', 'https://use.fontawesome.com/releases/v5.2.0/css/all.css' );
 		});
 	}
 

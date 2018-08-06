@@ -1,5 +1,6 @@
-
 <?php
+
+namespace Yugensoft\TasteDive;
 
 defined( 'ABSPATH' ) || exit;
 
